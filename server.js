@@ -108,10 +108,10 @@ io.on('connection', (socket) => {
     });
 
     // ── REALTIME WHITEBOARD ───────────────────
-    socket.on(ACTIONS.DRAW, ({ roomID, x0, y0, x1, y1, color, thickness }) => {
+    socket.on(ACTIONS.DRAW, ({ roomID, x0, y0, x1, y1, color, thickness, isEraser }) => {
         if (!roomBoards[roomID]) roomBoards[roomID] = [];
-        roomBoards[roomID].push({ x0, y0, x1, y1, color, thickness });
-        socket.to(roomID).emit(ACTIONS.DRAW, { x0, y0, x1, y1, color, thickness });
+        roomBoards[roomID].push({ x0, y0, x1, y1, color, thickness, isEraser });
+        socket.to(roomID).emit(ACTIONS.DRAW, { x0, y0, x1, y1, color, thickness, isEraser });
     });
 
 
