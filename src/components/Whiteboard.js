@@ -193,29 +193,40 @@ const Whiteboard = ({
 
         socketRef.current.on(ACTIONS.CLEAR_BOARD, handleClearBoard);
 
+        // HELPER
+        const getCoordinates = (e) => {
+            if (e.touches && e.touches.length > 0) {
+                const rect = canvas.getBoundingClientRect();
+                return {
+                    x: e.touches[0].clientX - rect.left,
+                    y: e.touches[0].clientY - rect.top
+                };
+            }
+            return {
+                x: e.offsetX,
+                y: e.offsetY
+            };
+        };
+
         // START DRAW
         const startDraw = (e) => {
-
+            if (e.touches) e.preventDefault();
             drawing.current = true;
-
-            current.current = {
-                x: e.offsetX,
-                y: e.offsetY,
-            };
-
+            current.current = getCoordinates(e);
         };
 
         // DRAW
         const draw = (e) => {
+            if (e.touches) e.preventDefault();
+            if (!drawing.current) return;
 
-            if (!drawing.current)
-                return;
+            const pos = getCoordinates(e);
 
             const line = {
                 x0: current.current.x,
                 y0: current.current.y,
-                x1: e.offsetX,
-                y1: e.offsetY,
+                x1: pos.x,
+                y1: pos.y,
                 color: colorRef.current,
                 thickness: thicknessRef.current,
                 isEraser: isEraserRef.current
@@ -244,39 +255,26 @@ const Whiteboard = ({
                 }
             );
 
-            current.current = {
-                x: e.offsetX,
-                y: e.offsetY,
-            };
+            current.current = pos;
 
         };
 
         // STOP DRAW
-        const stopDraw = () => {
-
+        const stopDraw = (e) => {
+            if (e && e.touches) e.preventDefault();
             drawing.current = false;
-
         };
 
-        canvas.addEventListener(
-            'mousedown',
-            startDraw
-        );
+        canvas.addEventListener('mousedown', startDraw);
+        canvas.addEventListener('mousemove', draw);
+        window.addEventListener('mouseup', stopDraw);
+        canvas.addEventListener('mouseleave', stopDraw);
 
-        canvas.addEventListener(
-            'mousemove',
-            draw
-        );
-
-        window.addEventListener(
-            'mouseup',
-            stopDraw
-        );
-
-        canvas.addEventListener(
-            'mouseleave',
-            stopDraw
-        );
+        // Touch events
+        canvas.addEventListener('touchstart', startDraw, { passive: false });
+        canvas.addEventListener('touchmove', draw, { passive: false });
+        window.addEventListener('touchend', stopDraw);
+        canvas.addEventListener('touchcancel', stopDraw);
 
         return () => {
 
@@ -294,25 +292,15 @@ const Whiteboard = ({
                 handleClearBoard
             );
 
-            canvas.removeEventListener(
-                'mousedown',
-                startDraw
-            );
+            canvas.removeEventListener('mousedown', startDraw);
+            canvas.removeEventListener('mousemove', draw);
+            window.removeEventListener('mouseup', stopDraw);
+            canvas.removeEventListener('mouseleave', stopDraw);
 
-            canvas.removeEventListener(
-                'mousemove',
-                draw
-            );
-
-            window.removeEventListener(
-                'mouseup',
-                stopDraw
-            );
-
-            canvas.removeEventListener(
-                'mouseleave',
-                stopDraw
-            );
+            canvas.removeEventListener('touchstart', startDraw);
+            canvas.removeEventListener('touchmove', draw);
+            window.removeEventListener('touchend', stopDraw);
+            canvas.removeEventListener('touchcancel', stopDraw);
 
             window.removeEventListener(
                 'resize',
