@@ -186,45 +186,51 @@ const Editor = ({
 
     return (
         <>
-            <div 
-                className="editorToolbar" 
-                style={{ 
-                    position: 'absolute', 
-                    top: '50px', 
-                    right: '16px', 
-                    zIndex: 10, 
-                    display: 'flex', 
-                    gap: '8px', 
-                    alignItems: 'center' 
-                }}
-            >
-                <button
-                    className="runCodeBtn"
-                    onClick={runCode}
-                    title="Execute Javascript"
-                >
-                    Run Code
-                </button>
-                <select 
-                    className="extensionSelect"
-                    value={fileExt}
-                    onChange={(e) => setFileExt(e.target.value)}
-                    title="Select file extension"
-                >
-                    <option value="js">.js</option>
-                    <option value="html">.html</option>
-                    <option value="css">.css</option>
-                    <option value="txt">.txt</option>
-                    <option value="json">.json</option>
-                    <option value="py">.py</option>
-                </select>
-                <button
-                    className="downloadCodeBtn"
-                    onClick={downloadCode}
-                    title="Download Code"
-                >
-                    Download
-                </button>
+            <div className="panelHeader">
+              <div className="panelTitle">
+                <svg className="panelIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+                </svg>
+                Code Editor
+              </div>
+              
+              <div 
+                  className="editorToolbar" 
+                  style={{ 
+                      position: 'static',
+                      display: 'flex', 
+                      gap: '8px', 
+                      alignItems: 'center' 
+                  }}
+              >
+                  <button
+                      className="runCodeBtn"
+                      onClick={runCode}
+                      title="Execute Javascript"
+                  >
+                      Run Code
+                  </button>
+                  <select 
+                      className="extensionSelect"
+                      value={fileExt}
+                      onChange={(e) => setFileExt(e.target.value)}
+                      title="Select file extension"
+                  >
+                      <option value="js">.js</option>
+                      <option value="html">.html</option>
+                      <option value="css">.css</option>
+                      <option value="txt">.txt</option>
+                      <option value="json">.json</option>
+                      <option value="py">.py</option>
+                  </select>
+                  <button
+                      className="downloadCodeBtn"
+                      onClick={downloadCode}
+                      title="Download Code"
+                  >
+                      Download
+                  </button>
+              </div>
             </div>
 
             <div className="editorWrapper" style={{ position: 'relative', width: '100%', height: '100%' }}>
