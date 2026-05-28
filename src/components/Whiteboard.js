@@ -260,8 +260,7 @@ const Whiteboard = ({
         };
 
         // STOP DRAW
-        const stopDraw = (e) => {
-            if (e && e.touches) e.preventDefault();
+        const stopDraw = () => {
             drawing.current = false;
         };
 
