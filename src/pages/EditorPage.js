@@ -27,10 +27,6 @@ const EditorPage = () => {
 
       socketRef.current.on('connect', () => {
         setIsConnected(true);
-        socketRef.current.emit(ACTIONS.JOIN, {
-          roomID,
-          username: location.state?.username,
-        });
       });
 
       socketRef.current.on('connect_error', (err) => {
@@ -67,6 +63,16 @@ const EditorPage = () => {
       }
     };
   }, [roomID, location.state, navigate]);
+
+  // ── Emit JOIN after children mount ────────────────────────────
+  useEffect(() => {
+    if (isConnected && socketRef.current) {
+      socketRef.current.emit(ACTIONS.JOIN, {
+        roomID,
+        username: location.state?.username,
+      });
+    }
+  }, [isConnected, roomID, location.state]);
 
   // ── Guards ────────────────────────────────────────────────────
   if (!location.state) return <Navigate to="/" />;
