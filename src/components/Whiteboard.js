@@ -108,32 +108,32 @@ const Whiteboard = ({
 
         // RESIZE
         const resizeCanvas = () => {
+            if (!canvas || canvas.offsetWidth === 0 || canvas.offsetHeight === 0) return;
 
-            const oldLines =
-                [...linesRef.current];
+            const oldLines = [...linesRef.current];
 
-            canvas.width =
-                canvas.offsetWidth;
-
-            canvas.height =
-                canvas.offsetHeight;
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
 
             ctx.lineCap = 'round';
             ctx.lineJoin = 'round';
 
-            linesRef.current =
-                oldLines;
+            linesRef.current = oldLines;
 
             redrawBoard();
-
         };
 
         resizeCanvas();
 
-        window.addEventListener(
-            'resize',
-            resizeCanvas
-        );
+        const resizeObserver = new ResizeObserver(() => {
+            resizeCanvas();
+        });
+        
+        if (canvas.parentElement) {
+            resizeObserver.observe(canvas.parentElement);
+        }
+
+        window.addEventListener('resize', resizeCanvas);
 
         // RECEIVE REALTIME DRAW
         const handleDraw = ({
@@ -305,6 +305,7 @@ const Whiteboard = ({
                 'resize',
                 resizeCanvas
             );
+            resizeObserver.disconnect();
 
         };
 

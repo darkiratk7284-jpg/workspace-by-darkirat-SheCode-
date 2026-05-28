@@ -133,7 +133,9 @@ const Editor = ({
     const [fileExt, setFileExt] = useState('js');
 
     const runCode = () => {
-        if (fileExt === 'html') {
+        const isHtml = fileExt === 'html' || code.trim().startsWith('<');
+        
+        if (isHtml) {
             try {
                 const blob = new Blob([code], { type: 'text/html' });
                 const url = URL.createObjectURL(blob);
